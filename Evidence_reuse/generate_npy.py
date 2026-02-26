@@ -60,12 +60,12 @@ def generate_strict_features_v2(json_path, output_dir="cache", model_name='bert-
 
     # 6. 存储至指定缓存目录
     np.save(out_path / 'labels.npy', all_labels)
-    np.save(out_path / 'evidences_embeddings_r.npy', all_evd_embeddings)
-    np.save(out_path / 'evd_mask_r.npy', all_evd_masks)
+    np.save(out_path / 'evidences_embeddings_prev.npy', all_evd_embeddings)
+    np.save(out_path / 'evd_mask.npy', all_evd_masks)
     
     print(f"Success! All features saved to {out_path.absolute()}")
 
 if __name__ == "__main__":
     # 假设你的检索结果文件在这个路径
-    INPUT_JSON = "data/health_info_retrieved.json" 
+    INPUT_JSON = "data/health_info.json" 
     generate_strict_features_v2(INPUT_JSON)
