@@ -1,0 +1,12 @@
+{
+  "exp_name": "no_tfidf",
+  "macro_f1_avg": 0.8459620825906491,
+  "micro_f1_avg": 0.8892215568862275,
+  "real_precision_avg": 0.75,
+  "real_recall_avg": 0.7792207792207793,
+  "real_f1_avg": 0.7643312101910829,
+  "fake_precision_avg": 0.9330708661417323,
+  "fake_recall_avg": 0.9221789883268483,
+  "fake_f1_avg": 0.9275929549902152,
+  "mcc_avg": 0.6921746504534586
+}
