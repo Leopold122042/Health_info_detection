@@ -36,7 +36,7 @@ class NpyFactCheckDataset(Dataset):
 # Step 2: Sigma 掩码分类模型
 # -----------------------------------------
 class SigmaVectorClassifier(nn.Module):
-    def __init__(self, input_dim=768, hidden_dim=256, num_labels=3):
+    def __init__(self, input_dim=768, hidden_dim=256, num_labels=2):
         super().__init__()
         # 深度特征提取网络
         self.mlp = nn.Sequential(
@@ -72,7 +72,7 @@ class SigmaVectorClassifier(nn.Module):
 def train_and_eval():
     # 配置
     DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    BATCH_SIZE = 64
+    BATCH_SIZE = 32
     EPOCHS = 20
     LEARNING_RATE = 1e-4
     CACHE_DIR = "cache"
