@@ -9,7 +9,6 @@ import os
 import sys
 import json
 import random
-from dataclasses import dataclass
 from typing import Dict, List
 from pathlib import Path
 
@@ -137,6 +136,34 @@ def evaluate(model, loader, device):
     }
 
 
+def _write_json(path: Path, payload: Dict) -> None:
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=2, ensure_ascii=False)
+
+
+def _write_jsonl(path: Path, payload: Dict) -> None:
+    with open(path, "a", encoding="utf-8") as f:
+        f.write(json.dumps(payload, ensure_ascii=False) + "\n")
+
+
+def _avg_metrics(metrics_list: List[Dict[str, float]]) -> Dict[str, float]:
+    def mean(key: str) -> float:
+        vals = [m.get(key, 0.0) for m in metrics_list]
+        return float(np.mean(vals)) if vals else 0.0
+
+    return {
+        "macro_f1_avg": mean("macro_f1"),
+        "micro_f1_avg": mean("micro_f1"),
+        "real_precision_avg": mean("real_precision"),
+        "real_recall_avg": mean("real_recall"),
+        "real_f1_avg": mean("real_f1"),
+        "fake_precision_avg": mean("fake_precision"),
+        "fake_recall_avg": mean("fake_recall"),
+        "fake_f1_avg": mean("fake_f1"),
+        "mcc_avg": mean("mcc"),
+    }
+
+
 def main():
     seed = int(os.environ.get("SEED", "42"))
     random.seed(seed)
@@ -148,7 +175,10 @@ def main():
     torch.backends.cudnn.benchmark = False
 
     cache_dir = os.environ.get("CACHE_DIR", "cache")
-    out_dir = Path(os.environ.get("OUT_DIR", "outputs/graph"))
+    root_out_dir = Path(os.environ.get("OUT_DIR", "outputs/graph/ablation"))
+    exp_name = "full_model"
+    exp_root_dir = root_out_dir / exp_name
+    out_dir = exp_root_dir / f"seed_{seed}"
     out_dir.mkdir(parents=True, exist_ok=True)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -198,6 +228,11 @@ def main():
     criterion = nn.CrossEntropyLoss(weight=class_weights)
 
     best_mcc = -1.0
+    best_metrics = {}
+    epoch_log_path = out_dir / "epoch_log.jsonl"
+    if epoch_log_path.exists():
+        epoch_log_path.unlink()
+
     for epoch in range(epochs):
         train_loss = train_one_epoch(model, train_loader, optimizer, criterion, device)
         metrics = evaluate(model, val_loader, device)
@@ -205,16 +240,64 @@ def main():
             f"Epoch {epoch+1}/{epochs}  loss={train_loss:.4f}  "
             f"acc={metrics['acc']:.4f}  macro_f1={metrics['macro_f1']:.4f}  mcc={metrics['mcc']:.4f}"
         )
+        _write_jsonl(
+            epoch_log_path,
+            {
+                "exp_name": exp_name,
+                "seed": seed,
+                "epoch": epoch + 1,
+                "train_loss": float(train_loss),
+                "val_acc": float(metrics["acc"]),
+                "val_macro_f1": float(metrics["macro_f1"]),
+                "val_micro_f1": float(metrics["micro_f1"]),
+                "val_mcc": float(metrics["mcc"]),
+            },
+        )
         if metrics["mcc"] > best_mcc:
             best_mcc = metrics["mcc"]
+            best_metrics = dict(metrics)
+            best_metrics["best_epoch"] = epoch + 1
             torch.save(
                 {"epoch": epoch, "model_state_dict": model.state_dict(), "metrics": metrics},
                 out_dir / "best_model.pt",
             )
 
-    with open(out_dir / "metrics.json", "w", encoding="utf-8") as f:
-        json.dump(metrics, f, indent=2)
-    print(f"Saved best model and metrics to {out_dir}")
+    _write_json(
+        out_dir / "metrics.json",
+        {
+            "exp_name": exp_name,
+            "seed": seed,
+            "best": best_metrics,
+        },
+    )
+
+    _write_json(
+        out_dir / "summary.json",
+        {
+            "exp_name": exp_name,
+            "seed": seed,
+            "macro_f1": best_metrics.get("macro_f1", 0.0),
+            "micro_f1": best_metrics.get("micro_f1", 0.0),
+            "real_precision": best_metrics.get("real_precision", 0.0),
+            "real_recall": best_metrics.get("real_recall", 0.0),
+            "real_f1": best_metrics.get("real_f1", 0.0),
+            "fake_precision": best_metrics.get("fake_precision", 0.0),
+            "fake_recall": best_metrics.get("fake_recall", 0.0),
+            "fake_f1": best_metrics.get("fake_f1", 0.0),
+            "mcc": best_metrics.get("mcc", 0.0),
+        },
+    )
+
+    avg_metrics = _avg_metrics([best_metrics])
+    _write_json(
+        exp_root_dir / "summary_avg.json",
+        {
+            "exp_name": exp_name,
+            **avg_metrics,
+        },
+    )
+
+    print(f"Saved full_model outputs to: {out_dir}")
 
 
 if __name__ == "__main__":

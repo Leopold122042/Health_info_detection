@@ -13,11 +13,11 @@ class NpyFactCheckDataset(Dataset):
         # 加载你生成的三个核心特征文件
         
         # After evidences optimized log 
-        self.embeddings = np.load(f"{data_dir}/evidences_embeddings_r.npy") # (N, 5, 768)
-        self.masks = np.load(f"{data_dir}/evd_mask_r.npy")                 # (N, 5)
+        # self.embeddings = np.load(f"{data_dir}/evidences_embeddings_r.npy") # (N, 5, 768)
+        # self.masks = np.load(f"{data_dir}/evd_mask_r.npy")                 # (N, 5)
         
-        # self.embeddings = np.load(f"{data_dir}/evidences_embeddings_prev.npy") # (N, 5, 768)
-        # self.masks = np.load(f"{data_dir}/evd_mask.npy")                 # (N, 5)
+        self.embeddings = np.load(f"{data_dir}/evidences_embeddings_prev.npy") # (N, 5, 768)
+        self.masks = np.load(f"{data_dir}/evd_mask_prev.npy")                 # (N, 5)
         self.labels = np.load(f"{data_dir}/labels.npy")                           # (N,)
         
         print(f"[Sigma] Loaded {len(self.labels)} samples from {data_dir}")
