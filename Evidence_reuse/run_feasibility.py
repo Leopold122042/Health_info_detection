@@ -8,6 +8,7 @@ from sentence_transformers import SentenceTransformer
 
 from milvus_reuse_pipeline import EvidenceReusePipeline
 from reuse_analysis import reuse_statistics, label_consistency
+from cache_retrieval_benchmark import CacheRetrievalBenchmark
 
 
 # ===============================
@@ -221,6 +222,32 @@ def main():
 
     claim_embeddings = encode_with_cache(claim_texts, encoder, cache_dir / "claims_embeddings.npy")
     evidence_embeddings = encode_with_cache(evidence_texts, encoder, cache_dir / "evidences_embeddings_prev.npy")
+
+    cache_benchmark = CacheRetrievalBenchmark(
+        encoder=encoder,
+        cache_dir=cache_dir,
+        sample_size=1000,
+        topk=5,
+        nprobe=16,
+    )
+    try:
+        cache_benchmark_result = cache_benchmark.run(claim_texts=claim_texts)
+        print("\n[Cache Retrieval Benchmark] A/C done on 1000-claim sample")
+    except Exception as exc:
+        cache_benchmark_result = {
+            "config": {
+                "requested_claim_sample_size": 1000,
+                "actual_claim_sample_size": 0,
+                "topk": 5,
+                "nprobe": 16,
+                "groups": ["A", "C"],
+            },
+            "groups": {},
+            "comparison": {
+                "note": f"benchmark execution failed: {exc}",
+            },
+        }
+        print(f"\n[Cache Retrieval Benchmark] skipped due to error: {exc}")
     
     if evidence_embeddings.ndim == 3:
         print(f"[Adjust] Detected 3D evidence embeddings {evidence_embeddings.shape}, flattening...")
@@ -293,6 +320,7 @@ def main():
             "search_topk": 5,
             "metric_type": "IP",
             "nprobe": 16,
+            "benchmark_claim_sample_size": int(cache_benchmark_result["config"].get("actual_claim_sample_size", 0)),
         },
         "metrics": {
             "reuse_statistics": reuse_stats,
@@ -300,6 +328,7 @@ def main():
             "hypothesis_tests": {
                 "similarity_trend_by_reuse": similarity_trend_test,
             },
+            "cache_retrieval_benchmark": cache_benchmark_result,
         },
         "visualization_data": {
             "full_evidence_reuse": full_reuse_plot_data,

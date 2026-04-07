@@ -4,7 +4,8 @@
     "evidence_count": 12350,
     "search_topk": 5,
     "metric_type": "IP",
-    "nprobe": 16
+    "nprobe": 16,
+    "benchmark_claim_sample_size": 1000
   },
   "metrics": {
     "reuse_statistics": {
@@ -36,6 +37,98 @@
           "group_count": 4
         },
         "conclusion": "支持“复用次数越大，平均相似度越低”"
+      }
+    },
+    "cache_retrieval_benchmark": {
+      "config": {
+        "requested_claim_sample_size": 1000,
+        "actual_claim_sample_size": 1000,
+        "topk": 5,
+        "nprobe": 16,
+        "groups": [
+          "A",
+          "C"
+        ],
+        "group_desc": {
+          "A": "Evidence与Claim都在线编码（无.npy缓存）",
+          "C": "Evidence与Claim都从.npy加载"
+        }
+      },
+      "groups": {
+        "A": {
+          "claim_count": 1000,
+          "latency": {
+            "total_wall_sec": 21.492152000020724,
+            "per_claim_total_ms": 21.492152000020724,
+            "search_sec": 1.0598465999937616,
+            "per_claim_search_ms": 1.0598465999937616,
+            "retrieval_pipeline_sec": 21.47007229999872
+          },
+          "throughput": {
+            "claims_per_sec_total": 46.52861193234794,
+            "claims_per_sec_search": 943.5327716349575
+          },
+          "resources": {
+            "cpu_process_time_sec": 11.5625,
+            "python_peak_alloc_mb": 366.62300395965576,
+            "gpu_peak_alloc_mb": null,
+            "rss_start_mb": 1838.93359375,
+            "rss_end_mb": 1869.46484375,
+            "rss_peak_mb": 3299.47265625
+          },
+          "stage_time_breakdown_sec": {
+            "load_evidence_cache_sec": 0.0,
+            "encode_evidence_online_sec": 1336.194965999981,
+            "encode_claims_online_sec": 29.51663510000799,
+            "load_claim_cache_sec": 0.0,
+            "build_collection_sec": 0.5113477999693714,
+            "insert_evidences_sec": 11.510410499991849,
+            "build_index_sec": 8.388467400043737,
+            "search_sec": 1.0598465999937616
+          },
+          "status": "ok"
+        },
+        "C": {
+          "claim_count": 1000,
+          "latency": {
+            "total_wall_sec": 21.59998739999719,
+            "per_claim_total_ms": 21.59998739999719,
+            "search_sec": 0.941067399980966,
+            "per_claim_search_ms": 0.941067399980966,
+            "retrieval_pipeline_sec": 21.598777599981986
+          },
+          "throughput": {
+            "claims_per_sec_total": 46.29632330249091,
+            "claims_per_sec_search": 1062.6231447611785
+          },
+          "resources": {
+            "cpu_process_time_sec": 10.3125,
+            "python_peak_alloc_mb": 366.28017711639404,
+            "gpu_peak_alloc_mb": null,
+            "rss_start_mb": 1870.94140625,
+            "rss_end_mb": 1887.9140625,
+            "rss_peak_mb": 3306.76171875
+          },
+          "stage_time_breakdown_sec": {
+            "load_evidence_cache_sec": 0.036833499965723604,
+            "encode_evidence_online_sec": 0.0,
+            "encode_claims_online_sec": 0.0,
+            "load_claim_cache_sec": 0.005494299985002726,
+            "build_collection_sec": 0.5292161999968812,
+            "insert_evidences_sec": 11.731003499997314,
+            "build_index_sec": 8.397490500006825,
+            "search_sec": 0.941067399980966
+          },
+          "status": "ok"
+        }
+      },
+      "comparison": {
+        "c_vs_a": {
+          "total_wall_time_reduction_ratio": -0.005017431478074502,
+          "per_claim_latency_reduction_ratio": -0.005017431478074502,
+          "total_throughput_improvement_ratio": -0.0049923825407638634,
+          "note": "正值表示C组优于A组"
+        }
       }
     }
   },
