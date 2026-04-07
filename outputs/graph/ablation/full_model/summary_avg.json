@@ -1,0 +1,12 @@
+{
+  "exp_name": "full_model",
+  "macro_f1_avg": 0.8487261747499528,
+  "micro_f1_avg": 0.8882235528942116,
+  "real_precision_avg": 0.7297297297297297,
+  "real_recall_avg": 0.8181818181818182,
+  "real_f1_avg": 0.7714285714285715,
+  "fake_precision_avg": 0.9434724091520862,
+  "fake_recall_avg": 0.9092088197146563,
+  "fake_f1_avg": 0.9260237780713342,
+  "mcc_avg": 0.6997720580549891
+}
