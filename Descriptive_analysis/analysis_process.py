@@ -593,6 +593,7 @@ def build_records(raw_data):
 				"label": label,
 				"domain": clean_text(item.get("domain", "")),
 				"source": clean_text(item.get("source", "")),
+				"source_desc": clean_text(item.get("source_desc", "")),
 				"date": item.get("date"),
 				"parsed_date": parsed,
 				"claim_len": len(claim),
@@ -659,6 +660,38 @@ def label_distribution(records):
 	}
 
 
+def source_distribution_stats(records):
+	normalized = []
+	for r in records:
+		source = r.get("source", "")
+		source_desc = r.get("source_desc", "")
+		if source:
+			normalized.append(source)
+		elif source_desc:
+			normalized.append(source_desc)
+		else:
+			normalized.append("UNKNOWN")
+	counts = Counter(normalized)
+	total = len(normalized)
+
+	rows = []
+	for source, count in sorted(counts.items(), key=lambda kv: (-kv[1], kv[0])):
+		rows.append(
+			{
+				"source": source,
+				"count": int(count),
+				"ratio": float(count / total) if total else None,
+			}
+		)
+
+	return {
+		"total_samples": int(total),
+		"unique_source_count": int(len(counts)),
+		"unknown_source_count": int(counts.get("UNKNOWN", 0)),
+		"distribution": rows,
+	}
+
+
 def run_analysis(data_path, stopwords_path, blocklist_path, output_path):
 	raw = load_json(data_path)
 	records, invalid_date = build_records(raw)
@@ -687,6 +720,7 @@ def run_analysis(data_path, stopwords_path, blocklist_path, output_path):
 			"keyword_blocklist": sorted(list(blocklist)),
 		},
 		"label_distribution": label_distribution(records),
+		"source_distribution": source_distribution_stats(records),
 		"time_and_length": time_and_length_stats(records, invalid_date),
 		"keywords_by_time_period": top_keywords_by_period(records, stopwords, blocklist, top_n=30),
 		"distorted_claim_topics_label1": distorted_claim_topics(records, stopwords, blocklist, top_n=40),

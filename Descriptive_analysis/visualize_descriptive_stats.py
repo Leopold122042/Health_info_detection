@@ -109,6 +109,40 @@ def plot_time_distribution(data: dict, out_dir: str):
     save_fig(fig, os.path.join(out_dir, "fig1_time_distribution.png"))
 
 
+def plot_source_distribution(data: dict, out_dir: str, top_n: int = 15):
+    source_data = data.get("source_distribution", {})
+    rows = source_data.get("distribution", []) if isinstance(source_data, dict) else []
+    if not rows:
+        return
+
+    top_rows = rows[:top_n]
+    labels = [r.get("source", "UNKNOWN") for r in top_rows]
+    counts = [r.get("count", 0) for r in top_rows]
+    ratios = [r.get("ratio") for r in top_rows]
+
+    labels = labels[::-1]
+    counts = counts[::-1]
+    ratios = ratios[::-1]
+
+    fig, ax = plt.subplots(figsize=figsize(10))
+    y = np.arange(len(labels))
+    bars = ax.barh(y, counts, color=COLOR_CMP_BLUE_FILL, edgecolor=COLOR_CMP_BLUE, alpha=0.75)
+
+    for bar, ratio in zip(bars, ratios):
+        width = bar.get_width()
+        ratio_text = f" ({ratio:.1%})" if isinstance(ratio, (int, float)) else ""
+        ax.text(width, bar.get_y() + bar.get_height() / 2, f"{int(width)}{ratio_text}", va="center", ha="left", fontsize=9)
+
+    ax.set_yticks(y)
+    ax.set_yticklabels(labels)
+    ax.set_xlabel("样本数")
+    ax.set_ylabel("Source")
+    ax.set_title(f"Source 信息分布（Top {min(top_n, len(rows))}）")
+    ax.grid(axis="x", linestyle="--", linewidth=0.6, alpha=0.45)
+
+    save_fig(fig, os.path.join(out_dir, "fig4_source_distribution.png"))
+
+
 def _kde_curve(values: List[float], points=200):
     if not values:
         return np.array([]), np.array([])
@@ -385,6 +419,7 @@ def main():
     data = load_json(args.input)
 
     plot_time_distribution(data, args.output_dir)
+    plot_source_distribution(data, args.output_dir, top_n=15)
     plot_length_distributions(data, args.output_dir)
     plot_keywords_wordcloud(data, args.output_dir, top_k=120)
     plot_evidence_slots(data, args.output_dir)
