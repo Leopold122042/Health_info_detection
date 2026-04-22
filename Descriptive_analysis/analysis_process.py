@@ -101,6 +101,19 @@ def clean_text(text):
 	return text
 
 
+def count_words(text):
+	text = clean_text(text)
+	if not text:
+		return 0
+	try:
+		import jieba
+
+		return sum(1 for t in jieba.cut(text) if t.strip())
+	except Exception:
+		# Fallback: count each Chinese character and contiguous alnum tokens.
+		return len(re.findall(r"[\u4e00-\u9fff]|[A-Za-z0-9]+", text))
+
+
 def basic_summary_stats(values):
 	if not values:
 		return {
@@ -238,6 +251,31 @@ def distorted_claim_topics(records, stopwords, blocklist, top_n=40):
 		"top_by_log_odds": rows[:top_n],
 		"meta": {"label1_total_tokens": int(n1), "label0_total_tokens": int(n0)},
 	}
+
+
+def keywords_by_label(records, stopwords, blocklist, top_n=120):
+	by_label = {0: Counter(), 1: Counter()}
+	sample_sizes = {0: 0, 1: 0}
+
+	for r in records:
+		label = r.get("label")
+		if label not in by_label:
+			continue
+		sample_sizes[label] += 1
+		by_label[label].update(tokenize(r.get("claim", ""), stopwords, blocklist))
+
+	result = {}
+	for label in [0, 1]:
+		cnt = by_label[label]
+		result[f"label_{label}"] = {
+			"sample_size": int(sample_sizes[label]),
+			"total_tokens": int(sum(cnt.values())),
+			"top_keywords": [
+				{"token": token, "freq": int(freq)}
+				for token, freq in cnt.most_common(top_n)
+			],
+		}
+	return result
 
 
 def safe_scipy_stats():
@@ -612,6 +650,12 @@ def time_and_length_stats(records, invalid_date):
 	claim_lens = []
 	evidence_lens = []
 	evidence_total_lens = []
+	claim_word_counts_all = []
+	evidence_sentence_word_counts_all = []
+	word_counts_by_label = {
+		"0": {"claim": [], "evidence_sentence": []},
+		"1": {"claim": [], "evidence_sentence": []},
+	}
 
 	for r in records:
 		if r["parsed_date"] is not None:
@@ -619,6 +663,24 @@ def time_and_length_stats(records, invalid_date):
 		claim_lens.append(r["claim_len"])
 		evidence_lens.extend(r["evidence_lens"])
 		evidence_total_lens.append(r["evidence_total_len"])
+
+		cw = count_words(r.get("claim", ""))
+		claim_word_counts_all.append(cw)
+
+		label_key = str(r.get("label"))
+		if label_key in word_counts_by_label:
+			word_counts_by_label[label_key]["claim"].append(cw)
+
+		for evd in r.get("evidence_texts", []):
+			ew = count_words(evd)
+			evidence_sentence_word_counts_all.append(ew)
+			if label_key in word_counts_by_label:
+				word_counts_by_label[label_key]["evidence_sentence"].append(ew)
+
+	def _avg(values):
+		if not values:
+			return None
+		return float(np.mean(values))
 
 	return {
 		"claim_time_distribution_monthly": {
@@ -643,6 +705,34 @@ def time_and_length_stats(records, invalid_date):
 				"summary": basic_summary_stats(evidence_total_lens),
 				"histogram": histogram(evidence_total_lens, bins=20),
 				"values": [int(v) for v in evidence_total_lens],
+			},
+		},
+		"word_count_averages": {
+			"all": {
+				"avg_words_in_claim": _avg(claim_word_counts_all),
+				"avg_words_in_evidence_sentences": _avg(evidence_sentence_word_counts_all),
+				"claim_sample_size": int(len(claim_word_counts_all)),
+				"evidence_sentence_sample_size": int(len(evidence_sentence_word_counts_all)),
+			},
+			"label_0": {
+				"avg_words_in_claim": _avg(word_counts_by_label["0"]["claim"]),
+				"avg_words_in_evidence_sentences": _avg(
+					word_counts_by_label["0"]["evidence_sentence"]
+				),
+				"claim_sample_size": int(len(word_counts_by_label["0"]["claim"])),
+				"evidence_sentence_sample_size": int(
+					len(word_counts_by_label["0"]["evidence_sentence"])
+				),
+			},
+			"label_1": {
+				"avg_words_in_claim": _avg(word_counts_by_label["1"]["claim"]),
+				"avg_words_in_evidence_sentences": _avg(
+					word_counts_by_label["1"]["evidence_sentence"]
+				),
+				"claim_sample_size": int(len(word_counts_by_label["1"]["claim"])),
+				"evidence_sentence_sample_size": int(
+					len(word_counts_by_label["1"]["evidence_sentence"])
+				),
 			},
 		},
 	}
@@ -723,6 +813,7 @@ def run_analysis(data_path, stopwords_path, blocklist_path, output_path):
 		"source_distribution": source_distribution_stats(records),
 		"time_and_length": time_and_length_stats(records, invalid_date),
 		"keywords_by_time_period": top_keywords_by_period(records, stopwords, blocklist, top_n=30),
+		"keywords_by_label": keywords_by_label(records, stopwords, blocklist, top_n=120),
 		"distorted_claim_topics_label1": distorted_claim_topics(records, stopwords, blocklist, top_n=40),
 		"evidence_slot_distribution": evidence_slots,
 		"claim_evidence_tfidf_similarity": tfidf_stats,
@@ -786,6 +877,46 @@ def print_summary_tables(result):
 		title="Label=0/1 分组差异检验汇总（Mann-Whitney U）",
 		headers=["Metric", "Mean(label0)", "Mean(label1)", "p-value", "Sig."],
 		rows=rows_test,
+	)
+
+	word_stats = result.get("time_and_length", {}).get("word_count_averages", {})
+	rows_words = [
+		[
+			"All",
+			word_stats.get("all", {}).get("claim_sample_size", "NA"),
+			word_stats.get("all", {}).get("evidence_sentence_sample_size", "NA"),
+			fmt_num(word_stats.get("all", {}).get("avg_words_in_claim")),
+			fmt_num(word_stats.get("all", {}).get("avg_words_in_evidence_sentences")),
+		],
+		[
+			"Label 0",
+			word_stats.get("label_0", {}).get("claim_sample_size", "NA"),
+			word_stats.get("label_0", {}).get("evidence_sentence_sample_size", "NA"),
+			fmt_num(word_stats.get("label_0", {}).get("avg_words_in_claim")),
+			fmt_num(
+				word_stats.get("label_0", {}).get("avg_words_in_evidence_sentences")
+			),
+		],
+		[
+			"Label 1",
+			word_stats.get("label_1", {}).get("claim_sample_size", "NA"),
+			word_stats.get("label_1", {}).get("evidence_sentence_sample_size", "NA"),
+			fmt_num(word_stats.get("label_1", {}).get("avg_words_in_claim")),
+			fmt_num(
+				word_stats.get("label_1", {}).get("avg_words_in_evidence_sentences")
+			),
+		],
+	]
+	print_table(
+		title="Avg Words 统计（All / Label 0 / Label 1）",
+		headers=[
+			"Group",
+			"Claim Count",
+			"Evidence Sentence Count",
+			"Avg Words in the Claim",
+			"Avg Words in the Evidence Sentences",
+		],
+		rows=rows_words,
 	)
 
 

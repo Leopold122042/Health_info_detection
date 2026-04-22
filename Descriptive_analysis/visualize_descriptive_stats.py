@@ -1,4 +1,5 @@
 import argparse
+import hashlib
 import json
 import os
 import sys
@@ -78,8 +79,10 @@ def get_chinese_font_path() -> str:
     return ""
 
 
-def save_fig(fig, out_path: str):
-    fig.tight_layout()
+def save_fig(fig, out_path: str, tight_layout_kwargs=None):
+    if tight_layout_kwargs is None:
+        tight_layout_kwargs = {}
+    fig.tight_layout(**tight_layout_kwargs)
     fig.savefig(out_path, bbox_inches="tight")
     plt.close(fig)
 
@@ -191,42 +194,97 @@ def plot_length_distributions(data: dict, out_dir: str):
 
 
 def plot_keywords_wordcloud(data: dict, out_dir: str, top_k=120):
-    kv = data["keywords_by_time_period"]
-    periods = sorted(kv.keys())
+    def _freq_from_label_keywords(label_key: str) -> Dict[str, int]:
+        rows = data.get("keywords_by_label", {}).get(label_key, {}).get("top_keywords", [])
+        if rows:
+            freq = {}
+            for row in rows:
+                token = row.get("token")
+                val = row.get("freq", 0)
+                if token and val:
+                    freq[token] = int(val)
+            return dict(sorted(freq.items(), key=lambda x: x[1], reverse=True)[:top_k])
 
-    token_global = {}
-    for period in periods:
-        for row in kv[period].get("top_keywords", []):
-            token = row["token"]
-            token_global[token] = token_global.get(token, 0) + row["freq"]
+        # Backward-compatible fallback for older descriptive_stats.json.
+        fallback = data.get("distorted_claim_topics_label1", {}).get("top_by_log_odds", [])
+        field = "freq_label0" if label_key == "label_0" else "freq_label1"
+        freq = {}
+        for row in fallback:
+            token = row.get("token")
+            val = row.get(field, 0)
+            if token and isinstance(val, (int, float)) and val > 0:
+                freq[token] = int(val)
+        return dict(sorted(freq.items(), key=lambda x: x[1], reverse=True)[:top_k])
 
-    top_freq = dict(sorted(token_global.items(), key=lambda x: x[1], reverse=True)[:top_k])
-    fig, ax = plt.subplots(figsize=figsize(11))
+    def _soft_color_func(palette: List[str]):
+        def _color_func(word, font_size, position, orientation, random_state=None, **kwargs):
+            if random_state is not None:
+                idx = random_state.randint(0, len(palette) - 1)
+            else:
+                idx = int(hashlib.md5(word.encode("utf-8")).hexdigest(), 16) % len(palette)
+            return palette[idx]
 
-    if WordCloud is None:
-        tokens = list(top_freq.keys())[:30][::-1]
-        values = [top_freq[t] for t in tokens]
-        ax.barh(tokens, values, color=COLOR_LABEL0, alpha=0.85)
-        ax.set_xlabel("词频（次）")
-        ax.set_ylabel("关键词")
-    else:
-        wc = WordCloud(
-            width=1600,
-            height=900,
-            background_color="white",
-            colormap="viridis",
-            max_words=top_k,
-            relative_scaling=0.5,
-            prefer_horizontal=0.9,
-            font_path=get_chinese_font_path() or None,
-            contour_width=1,
-            contour_color="#bdbdbd",
-        ).generate_from_frequencies(top_freq)
-        ax.imshow(wc, interpolation="bilinear")
-        ax.axis("off")
+        return _color_func
 
-    ax.set_title("关键词词云（全时段汇总）")
-    save_fig(fig, os.path.join(out_dir, "fig3_keywords_wordcloud.png"))
+    freq_label0 = _freq_from_label_keywords("label_0")
+    freq_label1 = _freq_from_label_keywords("label_1")
+
+    fig, axes = plt.subplots(1, 2, figsize=figsize(15))
+    configs = [
+        (
+            axes[0],
+            freq_label0,
+            "Label=0 关键词词云",
+            ["#3F6F9E", "#4C7EAC", "#5A8CB9", "#6A98C1", "#4B77A3", "#7AA6CC"],
+            "#4F7FAE",
+        ),
+        (
+            axes[1],
+            freq_label1,
+            "Label=1 关键词词云",
+            ["#3F7D58", "#4B8D65", "#5A9D73", "#6CAB81", "#4A9368", "#79B58E"],
+            "#4D9067",
+        ),
+    ]
+
+    for ax, freq_map, title, palette, bar_color in configs:
+        if not freq_map:
+            ax.text(0.5, 0.5, "暂无可用关键词", ha="center", va="center", fontsize=11)
+            ax.axis("off")
+            ax.set_title(title)
+            continue
+
+        if WordCloud is None:
+            tokens = list(freq_map.keys())[:30][::-1]
+            values = [freq_map[t] for t in tokens]
+            ax.barh(tokens, values, color=bar_color, alpha=0.9)
+            ax.set_xlabel("词频（次）")
+            ax.set_ylabel("关键词")
+        else:
+            wc = WordCloud(
+                width=1200,
+                height=900,
+                background_color="white",
+                max_words=top_k,
+                relative_scaling=0.45,
+                prefer_horizontal=0.9,
+                font_path=get_chinese_font_path() or None,
+                contour_width=0.6,
+                contour_color="#d9d9d9",
+                color_func=_soft_color_func(palette),
+            ).generate_from_frequencies(freq_map)
+            ax.imshow(wc, interpolation="bilinear")
+            ax.axis("off")
+
+        ax.set_title(title)
+
+    fig.subplots_adjust(wspace=0.02)
+    fig.suptitle("关键词词云分布（按 Label 分组）", y=1.02)
+    save_fig(
+        fig,
+        os.path.join(out_dir, "fig3_keywords_wordcloud.png"),
+        tight_layout_kwargs={"w_pad": 0.1, "pad": 0.4, "rect": (0, 0, 1, 0.95)},
+    )
 
 
 def plot_evidence_slots(data: dict, out_dir: str):

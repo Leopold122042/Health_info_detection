@@ -1,12 +1,12 @@
 {
   "meta": {
-    "input_data": "C:\\Users\\10632\\Documents\\GitHub\\Health_info_detection\\data\\health_info.json",
+    "input_data": "c:\\Users\\10632\\Documents\\GitHub\\Health_info_detection\\data\\health_info.json",
     "sample_size": 5008,
-    "generated_at": "2026-04-02 10:31:00"
+    "generated_at": "2026-04-09 14:54:14"
   },
   "keyword_settings": {
-    "stopwords_path": "C:\\Users\\10632\\Documents\\GitHub\\Health_info_detection\\data\\stopwords_zh.txt",
-    "keyword_blocklist_path": "C:\\Users\\10632\\Documents\\GitHub\\Health_info_detection\\Descriptive_analysis\\keyword_blocklist.txt",
+    "stopwords_path": "c:\\Users\\10632\\Documents\\GitHub\\Health_info_detection\\data\\stopwords_zh.txt",
+    "keyword_blocklist_path": "c:\\Users\\10632\\Documents\\GitHub\\Health_info_detection\\Descriptive_analysis\\keyword_blocklist.txt",
     "keyword_blocklist_size": 69,
     "keyword_blocklist": [
       "1",
@@ -25847,6 +25847,26 @@
           595
         ]
       }
+    },
+    "word_count_averages": {
+      "all": {
+        "avg_words_in_claim": 12.739816293929712,
+        "avg_words_in_evidence_sentences": 129.53757085020243,
+        "claim_sample_size": 5008,
+        "evidence_sentence_sample_size": 12350
+      },
+      "label_0": {
+        "avg_words_in_claim": 15.843216896831844,
+        "avg_words_in_evidence_sentences": 124.62848402447315,
+        "claim_sample_size": 1231,
+        "evidence_sentence_sample_size": 2942
+      },
+      "label_1": {
+        "avg_words_in_claim": 11.72835583796664,
+        "avg_words_in_evidence_sentences": 131.07270408163265,
+        "claim_sample_size": 3777,
+        "evidence_sentence_sample_size": 9408
+      }
     }
   },
   "keywords_by_time_period": {
@@ -27026,6 +27046,980 @@
       ]
     }
   },
+  "keywords_by_label": {
+    "label_0": {
+      "sample_size": 1231,
+      "total_tokens": 10580,
+      "top_keywords": [
+        {
+          "token": "健康",
+          "freq": 53
+        },
+        {
+          "token": "风险",
+          "freq": 47
+        },
+        {
+          "token": "防控",
+          "freq": 35
+        },
+        {
+          "token": "专家",
+          "freq": 35
+        },
+        {
+          "token": "国家",
+          "freq": 27
+        },
+        {
+          "token": "医院",
+          "freq": 26
+        },
+        {
+          "token": "儿童",
+          "freq": 26
+        },
+        {
+          "token": "疾病",
+          "freq": 25
+        },
+        {
+          "token": "报告",
+          "freq": 24
+        },
+        {
+          "token": "人群",
+          "freq": 23
+        },
+        {
+          "token": "发布",
+          "freq": 23
+        },
+        {
+          "token": "发现",
+          "freq": 23
+        },
+        {
+          "token": "目前",
+          "freq": 22
+        },
+        {
+          "token": "重点",
+          "freq": 22
+        },
+        {
+          "token": "建议",
+          "freq": 22
+        },
+        {
+          "token": "效果",
+          "freq": 21
+        },
+        {
+          "token": "变异",
+          "freq": 21
+        },
+        {
+          "token": "糖尿病",
+          "freq": 21
+        },
+        {
+          "token": "民眾",
+          "freq": 20
+        },
+        {
+          "token": "肺炎",
+          "freq": 20
+        },
+        {
+          "token": "研发",
+          "freq": 19
+        },
+        {
+          "token": "指南",
+          "freq": 19
+        },
+        {
+          "token": "造成",
+          "freq": 19
+        },
+        {
+          "token": "近视",
+          "freq": 18
+        },
+        {
+          "token": "药物",
+          "freq": 18
+        },
+        {
+          "token": "食品",
+          "freq": 17
+        },
+        {
+          "token": "传播",
+          "freq": 17
+        },
+        {
+          "token": "检测",
+          "freq": 16
+        },
+        {
+          "token": "降低",
+          "freq": 16
+        },
+        {
+          "token": "正式",
+          "freq": 16
+        },
+        {
+          "token": "加强",
+          "freq": 16
+        },
+        {
+          "token": "临床",
+          "freq": 16
+        },
+        {
+          "token": "启动",
+          "freq": 16
+        },
+        {
+          "token": "成功",
+          "freq": 16
+        },
+        {
+          "token": "食物",
+          "freq": 15
+        },
+        {
+          "token": "食用",
+          "freq": 15
+        },
+        {
+          "token": "发生",
+          "freq": 15
+        },
+        {
+          "token": "直接",
+          "freq": 15
+        },
+        {
+          "token": "组织",
+          "freq": 15
+        },
+        {
+          "token": "防疫",
+          "freq": 15
+        },
+        {
+          "token": "创新",
+          "freq": 15
+        },
+        {
+          "token": "举行",
+          "freq": 15
+        },
+        {
+          "token": "长期",
+          "freq": 14
+        },
+        {
+          "token": "完成",
+          "freq": 14
+        },
+        {
+          "token": "科学",
+          "freq": 14
+        },
+        {
+          "token": "控制",
+          "freq": 14
+        },
+        {
+          "token": "免疫",
+          "freq": 14
+        },
+        {
+          "token": "做好",
+          "freq": 14
+        },
+        {
+          "token": "国际",
+          "freq": 14
+        },
+        {
+          "token": "成立",
+          "freq": 14
+        },
+        {
+          "token": "手术",
+          "freq": 13
+        },
+        {
+          "token": "医疗",
+          "freq": 13
+        },
+        {
+          "token": "正常",
+          "freq": 13
+        },
+        {
+          "token": "消毒",
+          "freq": 13
+        },
+        {
+          "token": "治療",
+          "freq": 13
+        },
+        {
+          "token": "措施",
+          "freq": 13
+        },
+        {
+          "token": "美国",
+          "freq": 13
+        },
+        {
+          "token": "全国",
+          "freq": 13
+        },
+        {
+          "token": "严重",
+          "freq": 13
+        },
+        {
+          "token": "人员",
+          "freq": 13
+        },
+        {
+          "token": "眼睛",
+          "freq": 13
+        },
+        {
+          "token": "存在",
+          "freq": 12
+        },
+        {
+          "token": "核酸",
+          "freq": 12
+        },
+        {
+          "token": "人体",
+          "freq": 12
+        },
+        {
+          "token": "以上",
+          "freq": 12
+        },
+        {
+          "token": "避免",
+          "freq": 12
+        },
+        {
+          "token": "重要",
+          "freq": 12
+        },
+        {
+          "token": "上市",
+          "freq": 12
+        },
+        {
+          "token": "成分",
+          "freq": 12
+        },
+        {
+          "token": "朋友",
+          "freq": 12
+        },
+        {
+          "token": "世卫",
+          "freq": 12
+        },
+        {
+          "token": "女性",
+          "freq": 12
+        },
+        {
+          "token": "团队",
+          "freq": 12
+        },
+        {
+          "token": "保护",
+          "freq": 11
+        },
+        {
+          "token": "国产",
+          "freq": 11
+        },
+        {
+          "token": "冰箱",
+          "freq": 11
+        },
+        {
+          "token": "11",
+          "freq": 11
+        },
+        {
+          "token": "产生",
+          "freq": 11
+        },
+        {
+          "token": "脂肪",
+          "freq": 11
+        },
+        {
+          "token": "市民",
+          "freq": 11
+        },
+        {
+          "token": "营养",
+          "freq": 11
+        },
+        {
+          "token": "風險",
+          "freq": 11
+        },
+        {
+          "token": "全球",
+          "freq": 11
+        },
+        {
+          "token": "最新",
+          "freq": 11
+        },
+        {
+          "token": "安全",
+          "freq": 11
+        },
+        {
+          "token": "提供",
+          "freq": 11
+        },
+        {
+          "token": "莫德納",
+          "freq": 11
+        },
+        {
+          "token": "接受",
+          "freq": 11
+        },
+        {
+          "token": "引发",
+          "freq": 11
+        },
+        {
+          "token": "防护",
+          "freq": 11
+        },
+        {
+          "token": "开展",
+          "freq": 11
+        },
+        {
+          "token": "hpv",
+          "freq": 11
+        },
+        {
+          "token": "肿瘤",
+          "freq": 11
+        },
+        {
+          "token": "期间",
+          "freq": 10
+        },
+        {
+          "token": "症状",
+          "freq": 10
+        },
+        {
+          "token": "20",
+          "freq": 10
+        },
+        {
+          "token": "细菌",
+          "freq": 10
+        },
+        {
+          "token": "工作",
+          "freq": 10
+        },
+        {
+          "token": "疾控中心",
+          "freq": 10
+        },
+        {
+          "token": "蔬菜",
+          "freq": 10
+        },
+        {
+          "token": "15",
+          "freq": 10
+        },
+        {
+          "token": "接觸",
+          "freq": 10
+        },
+        {
+          "token": "時間",
+          "freq": 10
+        },
+        {
+          "token": "其他",
+          "freq": 10
+        },
+        {
+          "token": "心血管",
+          "freq": 10
+        },
+        {
+          "token": "12",
+          "freq": 10
+        },
+        {
+          "token": "召开",
+          "freq": 10
+        },
+        {
+          "token": "信息",
+          "freq": 10
+        },
+        {
+          "token": "实验室",
+          "freq": 10
+        },
+        {
+          "token": "论坛",
+          "freq": 10
+        },
+        {
+          "token": "生命",
+          "freq": 10
+        },
+        {
+          "token": "德尔塔",
+          "freq": 10
+        },
+        {
+          "token": "毒株",
+          "freq": 10
+        },
+        {
+          "token": "系统",
+          "freq": 10
+        },
+        {
+          "token": "首个",
+          "freq": 10
+        },
+        {
+          "token": "获批",
+          "freq": 10
+        },
+        {
+          "token": "阳性",
+          "freq": 9
+        },
+        {
+          "token": "饮食",
+          "freq": 9
+        },
+        {
+          "token": "心脏",
+          "freq": 9
+        },
+        {
+          "token": "医保",
+          "freq": 9
+        }
+      ]
+    },
+    "label_1": {
+      "sample_size": 3777,
+      "total_tokens": 22342,
+      "top_keywords": [
+        {
+          "token": "肺炎",
+          "freq": 158
+        },
+        {
+          "token": "健康",
+          "freq": 83
+        },
+        {
+          "token": "食物",
+          "freq": 82
+        },
+        {
+          "token": "致癌",
+          "freq": 80
+        },
+        {
+          "token": "癌症",
+          "freq": 71
+        },
+        {
+          "token": "死亡",
+          "freq": 56
+        },
+        {
+          "token": "孩子",
+          "freq": 55
+        },
+        {
+          "token": "血管",
+          "freq": 52
+        },
+        {
+          "token": "日本",
+          "freq": 47
+        },
+        {
+          "token": "食品",
+          "freq": 44
+        },
+        {
+          "token": "减肥",
+          "freq": 44
+        },
+        {
+          "token": "抗癌",
+          "freq": 44
+        },
+        {
+          "token": "疾病",
+          "freq": 41
+        },
+        {
+          "token": "牛奶",
+          "freq": 41
+        },
+        {
+          "token": "水果",
+          "freq": 41
+        },
+        {
+          "token": "营养",
+          "freq": 39
+        },
+        {
+          "token": "检测",
+          "freq": 38
+        },
+        {
+          "token": "人体",
+          "freq": 38
+        },
+        {
+          "token": "中毒",
+          "freq": 37
+        },
+        {
+          "token": "每天",
+          "freq": 37
+        },
+        {
+          "token": "造成",
+          "freq": 36
+        },
+        {
+          "token": "有毒",
+          "freq": 36
+        },
+        {
+          "token": "消毒",
+          "freq": 35
+        },
+        {
+          "token": "糖尿病",
+          "freq": 35
+        },
+        {
+          "token": "注射",
+          "freq": 33
+        },
+        {
+          "token": "鸡蛋",
+          "freq": 33
+        },
+        {
+          "token": "香蕉",
+          "freq": 32
+        },
+        {
+          "token": "有害",
+          "freq": 32
+        },
+        {
+          "token": "武漢",
+          "freq": 32
+        },
+        {
+          "token": "冠狀",
+          "freq": 31
+        },
+        {
+          "token": "免疫力",
+          "freq": 30
+        },
+        {
+          "token": "安全",
+          "freq": 29
+        },
+        {
+          "token": "不用",
+          "freq": 29
+        },
+        {
+          "token": "治療",
+          "freq": 29
+        },
+        {
+          "token": "30",
+          "freq": 28
+        },
+        {
+          "token": "血栓",
+          "freq": 28
+        },
+        {
+          "token": "已經",
+          "freq": 28
+        },
+        {
+          "token": "身体",
+          "freq": 27
+        },
+        {
+          "token": "大量",
+          "freq": 27
+        },
+        {
+          "token": "宝宝",
+          "freq": 27
+        },
+        {
+          "token": "提高",
+          "freq": 27
+        },
+        {
+          "token": "中國",
+          "freq": 27
+        },
+        {
+          "token": "传播",
+          "freq": 26
+        },
+        {
+          "token": "基因",
+          "freq": 26
+        },
+        {
+          "token": "感冒",
+          "freq": 26
+        },
+        {
+          "token": "大蒜",
+          "freq": 26
+        },
+        {
+          "token": "蜂蜜",
+          "freq": 26
+        },
+        {
+          "token": "医院",
+          "freq": 25
+        },
+        {
+          "token": "12",
+          "freq": 25
+        },
+        {
+          "token": "排毒",
+          "freq": 25
+        },
+        {
+          "token": "降低",
+          "freq": 25
+        },
+        {
+          "token": "说明",
+          "freq": 25
+        },
+        {
+          "token": "沒有",
+          "freq": 25
+        },
+        {
+          "token": "以上",
+          "freq": 24
+        },
+        {
+          "token": "长期",
+          "freq": 24
+        },
+        {
+          "token": "效果",
+          "freq": 24
+        },
+        {
+          "token": "預防",
+          "freq": 24
+        },
+        {
+          "token": "醫生",
+          "freq": 24
+        },
+        {
+          "token": "运动",
+          "freq": 23
+        },
+        {
+          "token": "一定",
+          "freq": 23
+        },
+        {
+          "token": "流感",
+          "freq": 23
+        },
+        {
+          "token": "直接",
+          "freq": 23
+        },
+        {
+          "token": "食用",
+          "freq": 23
+        },
+        {
+          "token": "西瓜",
+          "freq": 22
+        },
+        {
+          "token": "輝瑞",
+          "freq": 22
+        },
+        {
+          "token": "不好",
+          "freq": 21
+        },
+        {
+          "token": "核酸",
+          "freq": 21
+        },
+        {
+          "token": "症状",
+          "freq": 21
+        },
+        {
+          "token": "作用",
+          "freq": 21
+        },
+        {
+          "token": "发现",
+          "freq": 21
+        },
+        {
+          "token": "冰箱",
+          "freq": 21
+        },
+        {
+          "token": "mrna",
+          "freq": 21
+        },
+        {
+          "token": "酒精",
+          "freq": 20
+        },
+        {
+          "token": "11",
+          "freq": 20
+        },
+        {
+          "token": "醫院",
+          "freq": 20
+        },
+        {
+          "token": "肺部",
+          "freq": 20
+        },
+        {
+          "token": "因為",
+          "freq": 20
+        },
+        {
+          "token": "蛋白",
+          "freq": 20
+        },
+        {
+          "token": "艾滋病",
+          "freq": 19
+        },
+        {
+          "token": "等于",
+          "freq": 19
+        },
+        {
+          "token": "免疫",
+          "freq": 19
+        },
+        {
+          "token": "近视",
+          "freq": 19
+        },
+        {
+          "token": "阳性",
+          "freq": 19
+        },
+        {
+          "token": "功效",
+          "freq": 19
+        },
+        {
+          "token": "激素",
+          "freq": 19
+        },
+        {
+          "token": "猪肉",
+          "freq": 19
+        },
+        {
+          "token": "服用",
+          "freq": 19
+        },
+        {
+          "token": "美国",
+          "freq": 19
+        },
+        {
+          "token": "能够",
+          "freq": 19
+        },
+        {
+          "token": "c",
+          "freq": 19
+        },
+        {
+          "token": "出現",
+          "freq": 19
+        },
+        {
+          "token": "確診",
+          "freq": 19
+        },
+        {
+          "token": "一個",
+          "freq": 19
+        },
+        {
+          "token": "政府",
+          "freq": 19
+        },
+        {
+          "token": "防止",
+          "freq": 19
+        },
+        {
+          "token": "防疫",
+          "freq": 18
+        },
+        {
+          "token": "病人",
+          "freq": 18
+        },
+        {
+          "token": "期间",
+          "freq": 18
+        },
+        {
+          "token": "传染",
+          "freq": 18
+        },
+        {
+          "token": "身體",
+          "freq": 18
+        },
+        {
+          "token": "第一",
+          "freq": 18
+        },
+        {
+          "token": "保健品",
+          "freq": 18
+        },
+        {
+          "token": "皮肤",
+          "freq": 18
+        },
+        {
+          "token": "武汉",
+          "freq": 17
+        },
+        {
+          "token": "维生素",
+          "freq": 17
+        },
+        {
+          "token": "产生",
+          "freq": 17
+        },
+        {
+          "token": "严重",
+          "freq": 17
+        },
+        {
+          "token": "危害",
+          "freq": 17
+        },
+        {
+          "token": "代表",
+          "freq": 17
+        },
+        {
+          "token": "20",
+          "freq": 17
+        },
+        {
+          "token": "喝水",
+          "freq": 17
+        },
+        {
+          "token": "手机",
+          "freq": 17
+        },
+        {
+          "token": "医生",
+          "freq": 17
+        },
+        {
+          "token": "喝酒",
+          "freq": 17
+        },
+        {
+          "token": "献血",
+          "freq": 17
+        },
+        {
+          "token": "毒素",
+          "freq": 17
+        },
+        {
+          "token": "15",
+          "freq": 16
+        },
+        {
+          "token": "所有",
+          "freq": 16
+        },
+        {
+          "token": "柚子",
+          "freq": 16
+        },
+        {
+          "token": "风险",
+          "freq": 16
+        }
+      ]
+    }
+  },
   "distorted_claim_topics_label1": {
     "top_by_log_odds": [
       {
@@ -27050,13 +28044,6 @@
         "log_odds": 2.882497075716511
       },
       {
-        "token": "排毒",
-        "freq_label1": 25,
-        "freq_label0": 0,
-        "ratio_label1_over_label0": 17.197374859675886,
-        "log_odds": 2.844756747733664
-      },
-      {
         "token": "说明",
         "freq_label1": 25,
         "freq_label0": 0,
@@ -27064,14 +28051,21 @@
         "log_odds": 2.844756747733664
       },
       {
-        "token": "一個",
+        "token": "排毒",
+        "freq_label1": 25,
+        "freq_label0": 0,
+        "ratio_label1_over_label0": 17.197374859675886,
+        "log_odds": 2.844756747733664
+      },
+      {
+        "token": "激素",
         "freq_label1": 19,
         "freq_label0": 0,
         "ratio_label1_over_label0": 13.228749892058376,
         "log_odds": 2.5823924832661733
       },
       {
-        "token": "激素",
+        "token": "一個",
         "freq_label1": 19,
         "freq_label0": 0,
         "ratio_label1_over_label0": 13.228749892058376,
@@ -27092,28 +28086,7 @@
         "log_odds": 2.3716714519505206
       },
       {
-        "token": "變種",
-        "freq_label1": 15,
-        "freq_label0": 0,
-        "ratio_label1_over_label0": 10.5829999136467,
-        "log_odds": 2.3592489319519636
-      },
-      {
         "token": "抗生素",
-        "freq_label1": 15,
-        "freq_label0": 0,
-        "ratio_label1_over_label0": 10.5829999136467,
-        "log_odds": 2.3592489319519636
-      },
-      {
-        "token": "天然",
-        "freq_label1": 15,
-        "freq_label0": 0,
-        "ratio_label1_over_label0": 10.5829999136467,
-        "log_odds": 2.3592489319519636
-      },
-      {
-        "token": "隔离",
         "freq_label1": 15,
         "freq_label0": 0,
         "ratio_label1_over_label0": 10.5829999136467,
@@ -27127,7 +28100,28 @@
         "log_odds": 2.3592489319519636
       },
       {
+        "token": "隔离",
+        "freq_label1": 15,
+        "freq_label0": 0,
+        "ratio_label1_over_label0": 10.5829999136467,
+        "log_odds": 2.3592489319519636
+      },
+      {
         "token": "饮料",
+        "freq_label1": 15,
+        "freq_label0": 0,
+        "ratio_label1_over_label0": 10.5829999136467,
+        "log_odds": 2.3592489319519636
+      },
+      {
+        "token": "變種",
+        "freq_label1": 15,
+        "freq_label0": 0,
+        "ratio_label1_over_label0": 10.5829999136467,
+        "log_odds": 2.3592489319519636
+      },
+      {
+        "token": "天然",
         "freq_label1": 15,
         "freq_label0": 0,
         "ratio_label1_over_label0": 10.5829999136467,
@@ -27148,13 +28142,6 @@
         "log_odds": 2.294710410814392
       },
       {
-        "token": "排出",
-        "freq_label1": 14,
-        "freq_label0": 0,
-        "ratio_label1_over_label0": 9.92156241904378,
-        "log_odds": 2.294710410814392
-      },
-      {
         "token": "英國",
         "freq_label1": 14,
         "freq_label0": 0,
@@ -27163,6 +28150,13 @@
       },
       {
         "token": "神奇",
+        "freq_label1": 14,
+        "freq_label0": 0,
+        "ratio_label1_over_label0": 9.92156241904378,
+        "log_odds": 2.294710410814392
+      },
+      {
+        "token": "排出",
         "freq_label1": 14,
         "freq_label0": 0,
         "ratio_label1_over_label0": 9.92156241904378,
@@ -27246,13 +28240,6 @@
         "log_odds": 2.1123888540204376
       },
       {
-        "token": "洋蔥",
-        "freq_label1": 11,
-        "freq_label0": 0,
-        "ratio_label1_over_label0": 7.937249935235025,
-        "log_odds": 2.0715668595001824
-      },
-      {
         "token": "苦瓜",
         "freq_label1": 11,
         "freq_label0": 0,
@@ -27260,14 +28247,14 @@
         "log_odds": 2.0715668595001824
       },
       {
-        "token": "竟然",
+        "token": "豆浆",
         "freq_label1": 11,
         "freq_label0": 0,
         "ratio_label1_over_label0": 7.937249935235025,
         "log_odds": 2.0715668595001824
       },
       {
-        "token": "里面",
+        "token": "竟然",
         "freq_label1": 11,
         "freq_label0": 0,
         "ratio_label1_over_label0": 7.937249935235025,
@@ -27295,7 +28282,7 @@
         "log_odds": 2.0715668595001824
       },
       {
-        "token": "小龙虾",
+        "token": "洋蔥",
         "freq_label1": 11,
         "freq_label0": 0,
         "ratio_label1_over_label0": 7.937249935235025,
@@ -27303,6 +28290,13 @@
       },
       {
         "token": "颜色",
+        "freq_label1": 11,
+        "freq_label0": 0,
+        "ratio_label1_over_label0": 7.937249935235025,
+        "log_odds": 2.0715668595001824
+      },
+      {
+        "token": "小龙虾",
         "freq_label1": 11,
         "freq_label0": 0,
         "ratio_label1_over_label0": 7.937249935235025,
