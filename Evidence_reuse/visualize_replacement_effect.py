@@ -6,6 +6,7 @@ import sys
 
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.ticker import PercentFormatter
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if PROJECT_ROOT not in sys.path:
@@ -49,6 +50,12 @@ def wilson_ci95(p_hat, n):
     return max(0.0, center - margin), min(1.0, center + margin)
 
 
+def relative_lift(after_value, before_value):
+    if after_value is None or before_value is None or before_value <= 0:
+        return None
+    return (after_value / before_value) - 1.0
+
+
 def plot_grouped_delta_with_ci(data: dict, out_dir: str):
     grouped = data["similarity_improvement"]["grouped_by_prev_valid_evidence_count"]
     groups = sorted(grouped.keys(), key=lambda x: int(x))
@@ -66,6 +73,11 @@ def plot_grouped_delta_with_ci(data: dict, out_dir: str):
         n = block["delta_mean_sim"]["count"]
         counts.append(n)
 
+        pm = block["prev_mean_sim"]["mean"]
+        rm = block["retrieved_mean_sim"]["mean"]
+        pmax = block["prev_max_sim"]["mean"]
+        rmax = block["retrieved_max_sim"]["mean"]
+
         dm = block["delta_mean_sim"]["mean"]
         ds = block["delta_mean_sim"]["std"]
         mm = block["delta_max_sim"]["mean"]
@@ -74,13 +86,30 @@ def plot_grouped_delta_with_ci(data: dict, out_dir: str):
         ci_dm = mean_ci95(dm, ds, n)
         ci_mm = mean_ci95(mm, ms, n)
 
-        mean_delta.append(dm if dm is not None else np.nan)
-        mean_low.append((dm - ci_dm[0]) if ci_dm[0] is not None else np.nan)
-        mean_high.append((ci_dm[1] - dm) if ci_dm[1] is not None else np.nan)
+        dm_rel = relative_lift(rm, pm)
+        mm_rel = relative_lift(rmax, pmax)
 
-        max_delta.append(mm if mm is not None else np.nan)
-        max_low.append((mm - ci_mm[0]) if ci_mm[0] is not None else np.nan)
-        max_high.append((ci_mm[1] - mm) if ci_mm[1] is not None else np.nan)
+        if dm_rel is None or ci_dm[0] is None or pm is None or pm <= 0:
+            mean_delta.append(np.nan)
+            mean_low.append(np.nan)
+            mean_high.append(np.nan)
+        else:
+            ci_dm_low_rel = ci_dm[0] / pm
+            ci_dm_high_rel = ci_dm[1] / pm
+            mean_delta.append(dm_rel)
+            mean_low.append(dm_rel - ci_dm_low_rel)
+            mean_high.append(ci_dm_high_rel - dm_rel)
+
+        if mm_rel is None or ci_mm[0] is None or pmax is None or pmax <= 0:
+            max_delta.append(np.nan)
+            max_low.append(np.nan)
+            max_high.append(np.nan)
+        else:
+            ci_mm_low_rel = ci_mm[0] / pmax
+            ci_mm_high_rel = ci_mm[1] / pmax
+            max_delta.append(mm_rel)
+            max_low.append(mm_rel - ci_mm_low_rel)
+            max_high.append(ci_mm_high_rel - mm_rel)
 
     fig, axes = plt.subplots(1, 2, figsize=figsize(13))
     x = np.arange(len(groups))
@@ -101,12 +130,15 @@ def plot_grouped_delta_with_ci(data: dict, out_dir: str):
     ax.set_xticks(x)
     ax.set_xticklabels(groups)
     ax.set_xlabel("置换前有效证据数")
-    ax.set_ylabel("Δmean_sim（均值 ±95%CI）")
-    ax.set_title("分组平均相似度提升")
+    ax.set_ylabel("mean_sim 提升率（均值 ±95%CI）")
+    ax.yaxis.set_major_formatter(PercentFormatter(xmax=1.0, decimals=1))
+    ax.set_title("分组平均相似度百分比提升")
 
     for xi, yi, n in zip(x, mean_delta, counts):
         if not np.isnan(yi):
-            ax.text(xi, yi + 0.0015, f"n={n}", ha="center", va="bottom", fontsize=8)
+            yoff = 0.0015 if yi >= 0 else -0.0015
+            va = "bottom" if yi >= 0 else "top"
+            ax.text(xi, yi + yoff, f"n={n}", ha="center", va=va, fontsize=8)
 
     ax2 = axes[1]
     ax2.errorbar(
@@ -124,14 +156,17 @@ def plot_grouped_delta_with_ci(data: dict, out_dir: str):
     ax2.set_xticks(x)
     ax2.set_xticklabels(groups)
     ax2.set_xlabel("置换前有效证据数")
-    ax2.set_ylabel("Δmax_sim（均值 ±95%CI）")
-    ax2.set_title("分组最大相似度提升")
+    ax2.set_ylabel("max_sim 提升率（均值 ±95%CI）")
+    ax2.yaxis.set_major_formatter(PercentFormatter(xmax=1.0, decimals=1))
+    ax2.set_title("分组最大相似度百分比提升")
 
     for xi, yi, n in zip(x, max_delta, counts):
         if not np.isnan(yi):
-            ax2.text(xi, yi + 0.0015, f"n={n}", ha="center", va="bottom", fontsize=8)
+            yoff = 0.0015 if yi >= 0 else -0.0015
+            va = "bottom" if yi >= 0 else "top"
+            ax2.text(xi, yi + yoff, f"n={n}", ha="center", va=va, fontsize=8)
 
-    fig.suptitle("按证据数量分组的提升一致性检验", y=1.04)
+    fig.suptitle("按证据数量分组的百分比提升一致性检验", y=1.04)
     save_fig(fig, os.path.join(out_dir, "fig3_grouped_delta_ci.png"))
 
 
