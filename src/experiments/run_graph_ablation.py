@@ -339,11 +339,10 @@ def main():
     no_feat_mask = np.zeros(d_feat, dtype=np.float32)
 
     experiments: List[AblationConfig] = [
-        # AblationConfig(name="no_tfidf", use_tfidf=False, feature_mask=full_mask),
-        # AblationConfig(name="no_ce", use_tfidf=True, feature_mask=no_ce_mask),
-        # AblationConfig(name="no_ee", use_tfidf=True, feature_mask=no_ee_mask),
-        # AblationConfig(name="no_feats", use_tfidf=False, feature_mask=no_feat_mask),
-        # AblationConfig(name="full_model", use_tfidf=True, feature_mask=full_mask),
+         AblationConfig(name="no_tfidf", use_tfidf=False, feature_mask=full_mask),
+         AblationConfig(name="no_ce", use_tfidf=True, feature_mask=no_ce_mask),
+         AblationConfig(name="no_ee", use_tfidf=True, feature_mask=no_ee_mask),
+         AblationConfig(name="no_feats", use_tfidf=False, feature_mask=no_feat_mask),
     ]
 
     for config in experiments:

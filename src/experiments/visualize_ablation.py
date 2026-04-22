@@ -60,18 +60,15 @@ def plot_full_model_training_curve(ablation_dir: Path, out_dir: Path, seed: int)
     ax.set_title("full_model 训练损失曲线")
 
     ax2 = axes[1]
-    ax2.plot(epochs, val_macro_f1, color=PALETTE["line_green_high"], linewidth=1.8, marker="o", markersize=3, label="Val Macro-F1")
-    ax2.plot(epochs, val_mcc, color=PALETTE["line_blue_high"], linewidth=1.8, marker="o", markersize=3, label="Val MCC")
+    ax2.plot(epochs, val_macro_f1, color=PALETTE["line_green_high"], linewidth=1.8, marker="o", markersize=1, label="Val Macro-F1")
+    ax2.plot(epochs, val_mcc, color=PALETTE["line_blue_high"], linewidth=1.8, marker="o", markersize=1, label="Val MCC")
     ax2.plot(epochs, val_acc, color=PALETTE["line_neutral"], linewidth=1.6, linestyle="--", label="Val ACC")
-    ax2.axvline(best_epoch, color=PALETTE["axis_gray"], linestyle=":", linewidth=1.2)
-    ax2.axhline(best_mcc, color=PALETTE["axis_gray"], linestyle="--", linewidth=1.0)
-    ax2.scatter([best_epoch], [best_mcc], color=PALETTE["line_blue_high"], s=34, zorder=4)
     ax2.set_xlabel("Epoch")
     ax2.set_ylabel("Validation Metrics")
     ax2.set_title("full_model 验证集指标演化")
     ax2.legend(frameon=False, loc="lower right")
 
-    fig.suptitle("Ablation: full_model 训练过程", y=1.03)
+    fig.suptitle("完整模型训练过程", y=1.03)
     save_fig(fig, out_dir / "fig_ablation_full_model_training_curve.png")
 
 
@@ -122,7 +119,7 @@ def plot_ablation_contribution_ranking(ablation_dir: Path, out_dir: Path, seed: 
     ax2.set_title("不同指标对消融的敏感性")
     ax2.legend(frameon=False, loc="lower right")
 
-    fig.suptitle("Ablation 特征贡献与指标退化", y=1.03)
+    fig.suptitle("消融实验特征贡献与指标退化", y=1.03)
     save_fig(fig, out_dir / "fig_ablation_contribution_ranking.png")
 
 
@@ -163,7 +160,7 @@ def plot_fake_risk_oriented_map(ablation_dir: Path, out_dir: Path, seed: int):
 
     ax.set_xlabel("Fake Precision（越高越少误报）")
     ax.set_ylabel("Fake Recall（越高越少漏检）")
-    ax.set_title("风险导向：假信息识别的 Precision-Recall 分布")
+    ax.set_title("失真健康信息识别的 Precision-Recall 分布")
     x_vals = np.linspace(0.88, 0.95, 200)
     for fn_target in [50, 80, 110]:
         if fake_support and fake_support > 0:
