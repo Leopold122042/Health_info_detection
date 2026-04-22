@@ -1,0 +1,39 @@
+{
+  "model": "textcnn",
+  "variant": "r",
+  "variant_name": "after_replace",
+  "run_index": 1,
+  "final": {
+    "run_index": 1,
+    "accuracy": 0.8512974051896207,
+    "macro_f1": 0.7623532595286795,
+    "micro_f1": 0.8512974051896207,
+    "classification_report": {
+      "Real": {
+        "precision": 0.7692307692307693,
+        "recall": 0.5150214592274678,
+        "f1-score": 0.6169665809768637,
+        "support": 233.0
+      },
+      "Fake": {
+        "precision": 0.8664302600472813,
+        "recall": 0.953185955786736,
+        "f1-score": 0.9077399380804954,
+        "support": 769.0
+      },
+      "accuracy": 0.8512974051896207,
+      "macro avg": {
+        "precision": 0.8178305146390252,
+        "recall": 0.734103707507102,
+        "f1-score": 0.7623532595286795,
+        "support": 1002.0
+      },
+      "weighted avg": {
+        "precision": 0.8438279832406473,
+        "recall": 0.8512974051896207,
+        "f1-score": 0.8401249757999103,
+        "support": 1002.0
+      }
+    }
+  }
+}
